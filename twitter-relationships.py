@@ -65,6 +65,11 @@ common_users = {
 # from pprint import pprint
 # pprint(common_users)
 
+if tgtuser1 in all_users and tgtuser2 in all_users[tgtuser1]:
+    rel = relation_to_string(all_users[tgtuser1][tgtuser2], reverse=True)
+    print(f"{tgtuser1} {rel} {tgtuser2}")
+    print()
+
 for r1 in RELATIONS:
     for r2 in RELATIONS:
         group_users = []

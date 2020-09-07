@@ -33,7 +33,8 @@ mkdir -p "${data_folder}"
 
 download_user_data "${username1}"
 download_user_data "${username2}"
-# 1>&2 echo
 
-data_folder="${data_folder}" python3 ./build-json.py "${username1}" "${username2}" \
+1>&2 echo
+
+data_folder="${data_folder}"  python3 ./build-json.py "${username1}" "${username2}" \
     | python3 ./twitter-relationships.py "${username1}" "${username2}"
