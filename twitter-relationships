@@ -1,0 +1,39 @@
+#!/bin/bash
+
+script_name="$0"
+data_folder="${data_folder:="data/"}"
+
+function print_err_exit {
+    1>&2 echo "ERROR:" "$@"
+    1>&2 echo "usage: ${script_name} <YOU> <SOMEONE>"
+    exit 1
+}
+
+username1="$1"
+if [ -z "$1" ]; then print_err_exit "Missing first user name"; fi
+shift 1
+username2="$1"
+if [ -z "$1" ]; then print_err_exit "Missing second user name"; fi
+shift 1
+
+function download_user_data {
+    USER="$1"
+    # 1>&2 echo "Getting data for '${USER}'"  # DEBUG
+    file="${data_folder}/${USER}.followers.txt"
+    if [ ! -f "$file" ]; then
+        t followers  "${USER}" > "${file}"
+    fi
+    file="${data_folder}/${USER}.followings.txt"
+    if [ ! -f "$file" ]; then
+        t followings "${USER}" > "${file}"
+    fi
+}
+
+mkdir -p "${data_folder}"
+
+download_user_data "${username1}"
+download_user_data "${username2}"
+# 1>&2 echo
+
+data_folder="${data_folder}" python3 ./build-json.py "${username1}" "${username2}" \
+    | python3 ./twitter-relationships.py "${username1}" "${username2}"
